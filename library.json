@@ -1,0 +1,11 @@
+{
+    "name": "Fast_Buttons",
+    "version": "1.0.0",
+    "description": "Make your button implemenation fast and simple.",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/tuptusstokrotka/FastButton.git"
+    },
+    "frameworks": ["arduino", "espidf"],
+    "platforms": ["atmelavr", "espressif32"]
+}
