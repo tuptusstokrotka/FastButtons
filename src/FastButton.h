@@ -34,6 +34,7 @@ private:
     int analogThreshold = 800;                      // When using analog as a button define the threshold.
 
     bool stateRepeat[3] = {true, false, false};     // GetState() will repeat state. By default: released `true` | pressed `false` | held `false`
+    bool waitForHold    = false;                    // If true, the button will NOT return pressed before the hold or release
     bool waitForRelease = false;                    // Return state only with the button release. Note: ignores the stateRepeat
 
     // Monitoring
@@ -50,6 +51,7 @@ private:
     unsigned int press_count = 0;                   // Number of presses
 
     ButtonState GetState_wfr(ButtonState state);    // Wait For Release
+    ButtonState GetState_wfh(ButtonState state);    // Wait For Hold
     ButtonState GetState_sr(ButtonState state);     // State Repeat
 public:
 
@@ -66,6 +68,7 @@ public:
 
     inline void ConfigStateRepeat(bool released, bool pressed, bool held) {stateRepeat[0] = released; stateRepeat[1] = pressed; stateRepeat[2] = held;}
     inline void ConfigWaitForRelease(bool enable) {waitForRelease = enable;}
+    inline void ConfigWaitForHold(bool enable) {waitForHold = enable;}
     inline void ConfigHeldTime(unsigned long time) {hold_ms = time;}
 
     inline void ConfigDoublePressTime(unsigned long time) {doublePress_ms = time;}

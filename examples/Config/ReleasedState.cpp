@@ -22,14 +22,11 @@ char* GetStateStr(ButtonState state){
 void setup(){
     Serial.begin(115200);
 
-    // Button A Config - this will repeat released and hold
-    button_a.ConfigStateRepeat(true, false, true);
-    button_a.ConfigNormallyClosed();
+    button_a.ConfigStateRepeat(true, true, true); // Show all states
+    button_a.ConfigNormallyOpen();
 
-    // Button B Config - this will repeat released
-    button_b.ConfigStateRepeat(true, false, false);
+    button_b.ConfigStateRepeat(true, true, true); // Show all states
     button_b.ConfigNormallyClosed();
-
 }
 
 void loop(){

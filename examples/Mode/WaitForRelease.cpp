@@ -22,7 +22,6 @@ void setup(){
 
     // Button Config
     button.ConfigWaitForRelease(true); // This was already set in constructor
-    button.ConfigNormallyClosed();
 }
 
 void loop(){

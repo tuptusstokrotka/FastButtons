@@ -9,6 +9,9 @@ FastButton::FastButton(int pin, unsigned long hold, bool wfr){
 
 FastButton::~FastButton(){}
 
+/**
+ * @brief Check the button GPIO to determine the state
+ */
 bool FastButton::isPressed(void){
     //TODO make it baremetal
 
@@ -26,6 +29,12 @@ bool FastButton::isPressed(void){
     }
 }
 
+/**
+ * @brief
+ * @note WaitForRelease will ignore every other mode. State is always send on release.
+ * @param state raw state
+ * @return current state
+ */
 ButtonState FastButton::GetState_wfr(ButtonState state){
     ButtonState temp = last_State;                  // Save last state to temp
     last_State = state;                             // Update last state
@@ -35,6 +44,37 @@ ButtonState FastButton::GetState_wfr(ButtonState state){
     return ButtonState::unknown;                    // Return undefined
 }
 
+/**
+ * @brief
+ * @note WaitForHold sends `pressed` always once. `held` repeating can be configured via `StateRepeat`
+ * @param state raw state
+ * @return current state
+ */
+ButtonState FastButton::GetState_wfh(ButtonState state){
+    static bool pressed = false;
+
+    if(state == ButtonState::pressed){              // Trigger the Wait For Hold
+        pressed = true;                             // Set flag for wfh
+        return ButtonState::unknown;
+    }
+
+    if(pressed && state != ButtonState::pressed){   // Wait For Hold (or release)
+        pressed = false;                            // Reset flag for wfh
+        if(state == ButtonState::released)
+            return ButtonState::pressed;            // Return pressed - If the button was released
+        // else
+        //     return ButtonState::held;               // Return held - If the button was held
+    }
+    // Use State Repeat for the rest of the states
+    return GetState_sr(state);
+}
+
+/**
+ * @brief
+ * @note WaitForHold will never send `pressed` more than once.
+ * @param state raw state
+ * @return current state
+ */
 ButtonState FastButton::GetState_sr(ButtonState state){
     bool newState = (state != last_State);          // Check if the state has changed
 
@@ -55,6 +95,18 @@ ButtonState FastButton::GetState_sr(ButtonState state){
     }
 }
 
+
+/**
+ * @brief Read the button state using one of the configuration.
+ *
+ * + `WaitForRelease`
+ *
+ * + `WaitForHold`
+ *
+ * + `StateRepeat` (default)
+ *
+ * @return Current button state
+ */
 ButtonState FastButton::GetState(){
     ButtonState state = ButtonState::unknown;       // Current state
 
@@ -80,7 +132,10 @@ ButtonState FastButton::GetState(){
     /* State with Wait For Release */
     if(waitForRelease)
         return GetState_wfr(state);
-
+    /* State with Wait For Hold */
+    else if(waitForHold)
+        return GetState_wfh(state);
     /* State with State Repeat */
-    return GetState_sr(state);
+    else
+        return GetState_sr(state);
 }
