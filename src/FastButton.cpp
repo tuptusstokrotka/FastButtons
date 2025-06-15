@@ -98,13 +98,9 @@ ButtonState FastButton::GetState_sr(ButtonState state){
 
 /**
  * @brief Read the button state using one of the configuration.
- *
- * + `WaitForRelease`
- *
- * + `WaitForHold`
- *
- * + `StateRepeat` (default)
- *
+ * @brief + `WaitForRelease`
+ * @brief + `WaitForHold`
+ * @brief + `StateRepeat` (default)
  * @return Current button state
  */
 ButtonState FastButton::GetState(){
